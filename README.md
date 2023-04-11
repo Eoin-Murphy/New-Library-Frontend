@@ -12,3 +12,11 @@ We would like to see working solution and review code, project structure, tests.
 these two options:
 - Host your project online (example surge.sh), create and share your git repository
 - (or) Send, via email, project sources and instructions how to start it
+
+
+# Dev Progress:
+
+- Initially just set up a bare-bones Spring Boot App.
+- Decided to use H2 in memory database for persistence.
+- Defined a Book and Student entities.
+- 
