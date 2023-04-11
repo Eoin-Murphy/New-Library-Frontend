@@ -14,6 +14,14 @@ these two options:
 - (or) Send, via email, project sources and instructions how to start it
 
 
+# Assumptions:
+
+- It is not necessary to persist the state between runs of the program -> just using an in-memory DB and not proper persistence
+- Book can only be loaned to a single student at a time.
+- A student can loan many books at the same time.
+- If a student tries to load a book currently loaned to another student their request is rejected.
+- There is no time limit on loans and/or late fees.
+
 # Dev Progress:
 
 - Initially just set up a bare-bones Spring Boot App.
@@ -25,3 +33,5 @@ these two options:
 `curl --request GET --url http://localhost:8080/api/debug/books`
 
 `curl --request GET --url http://localhost:8080/api/debug/students`
+
+- Adding a Loan entity (inc. repo, service & controller). I decided to have a separate entity Loan instead of a one-to-many Student-Loan direct link for two reasons. (1) We want to be able to pull back the loans directly without having to query all students and (2) in a 'real' implementation we would probably want to have some kind of rules applied on loans so they would justify their own entity.

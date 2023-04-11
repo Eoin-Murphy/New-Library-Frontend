@@ -1,8 +1,10 @@
 package com.homework.comyno.nlf;
 
 import com.homework.comyno.nlf.entities.Book;
+import com.homework.comyno.nlf.entities.Loan;
 import com.homework.comyno.nlf.entities.Student;
 import com.homework.comyno.nlf.repositories.BookRepository;
+import com.homework.comyno.nlf.repositories.LoanRepository;
 import com.homework.comyno.nlf.repositories.StudentRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,34 +21,33 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 public class NlfApplication {
 
-	@Autowired
-	BookRepository bookRepository;
-	@Autowired
-	StudentRepository studentRepository;
+  @Autowired BookRepository bookRepository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(NlfApplication.class, args);
-	}
+  @Autowired StudentRepository studentRepository;
 
-	@Bean
-	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-		return args -> {
-			initializeDB();
-		};
-	}
+  @Autowired LoanRepository loanRepository;
 
-	private void initializeDB(){
-		bookRepository.saveAll(
-				List.of(
-						new Book("ISBN--1", "Book 1"),
-						new Book("ISBN--2", "Book 2"),
-						new Book("ISBN--3", "Book 3")));
+  public static void main(String[] args) {
+    SpringApplication.run(NlfApplication.class, args);
+  }
 
-		studentRepository.saveAll(
-				List.of(
-						new Student(1, "Alice", "Apple"),
-						new Student(2, "Bob", "Busker"),
-						new Student(3, "Clara", "Clarke")));
+  @Bean
+  public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+    return args -> {
+      initializeDB();
+    };
+  }
 
-	}
+  private void initializeDB() {
+    var book1 = new Book("ISBN--1", "Book 1");
+
+    bookRepository.saveAll(
+        List.of(book1, new Book("ISBN--2", "Book 2"), new Book("ISBN--3", "Book 3")));
+
+    var student1 = new Student(1, "Alice", "Apple", null);
+    studentRepository.saveAll(
+        List.of(student1, new Student(2, "Bob", "Busker", null), new Student(3, "Clara", "Clarke", null)));
+
+    loanRepository.save(new Loan("loan1", "book1", student1));
+  }
 }
