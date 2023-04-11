@@ -48,6 +48,6 @@ public class NlfApplication {
     studentRepository.saveAll(
         List.of(student1, new Student(2, "Bob", "Busker", null), new Student(3, "Clara", "Clarke", null)));
 
-    loanRepository.save(new Loan("loan1", "book1", student1));
+    loanRepository.save(new Loan("loan1", book1, student1));
   }
 }

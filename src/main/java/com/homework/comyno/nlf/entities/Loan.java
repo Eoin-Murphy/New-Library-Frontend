@@ -5,12 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Loan {
   @Id private String id;
 
-  private String book;
+  @OneToOne
+  @JoinColumn(name = "book_id", nullable = false)
+  @JsonManagedReference
+  private Book book;
 
   @ManyToOne
   @JoinColumn(name = "student_id", nullable = false)
@@ -19,7 +23,7 @@ public class Loan {
 
   public Loan() {}
 
-  public Loan(String id, String book, Student student) {
+  public Loan(String id, Book book, Student student) {
     this.id = id;
     this.book = book;
     this.student = student;
@@ -29,7 +33,7 @@ public class Loan {
     return id;
   }
 
-  public String getBook() {
+  public Book getBook() {
     return book;
   }
 

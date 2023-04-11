@@ -1,8 +1,7 @@
 package com.homework.comyno.nlf.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 
 @Entity
 public class Book {
@@ -10,6 +9,10 @@ public class Book {
 
   @Column(nullable = false)
   private String title;
+
+  @OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
+  @JsonBackReference
+  private Loan loan;
 
   public Book() {}
 
