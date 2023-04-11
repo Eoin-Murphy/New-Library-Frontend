@@ -19,4 +19,9 @@ these two options:
 - Initially just set up a bare-bones Spring Boot App.
 - Decided to use H2 in memory database for persistence.
 - Defined a Book and Student entities.
-- 
+- Main application pre-populates Student & Book tables with dummy data.
+- Added debug controller to verify entities are persisted:
+
+`curl --request GET --url http://localhost:8080/books`
+
+`curl --request GET --url http://localhost:8080/students`
