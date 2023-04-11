@@ -6,18 +6,14 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Book {
-  @Id
-  private String ISBN;
+  @Id private String ISBN;
 
-  @Column(nullable=false)
+  @Column(nullable = false)
   private String title;
 
-  public Book(){}
+  public Book() {}
 
-  public Book(
-      String ISBN,
-      String title
-  ){
+  public Book(String ISBN, String title) {
     this.ISBN = ISBN;
     this.title = title;
   }

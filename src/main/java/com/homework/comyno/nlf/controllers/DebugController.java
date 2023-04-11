@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/debug")
 public class DebugController {
 
-  @Autowired
-  BookRepository bookRepository;
+  @Autowired BookRepository bookRepository;
 
-  @Autowired
-  StudentRepository studentRepository;
+  @Autowired StudentRepository studentRepository;
 
   @GetMapping("/books")
   public Iterable<Book> getBooks() {
