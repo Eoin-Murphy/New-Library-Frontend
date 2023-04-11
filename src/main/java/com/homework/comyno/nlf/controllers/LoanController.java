@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoanController {
 
   @Autowired LoanRepository loanRepository;
-  @Autowired
-  StudentRepository studentRepository;
+  @Autowired StudentRepository studentRepository;
 
   @GetMapping("/")
   public Iterable<Loan> getLoans() {

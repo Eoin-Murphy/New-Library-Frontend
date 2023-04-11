@@ -46,5 +46,7 @@ public class Student {
     return lastName;
   }
 
-  public List<Loan> getLoans(){ return  loans;}
+  public List<Loan> getLoans() {
+    return loans;
+  }
 }

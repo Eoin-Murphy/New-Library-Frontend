@@ -40,13 +40,15 @@ public class NlfApplication {
 
   private void initializeDB() {
     var book1 = new Book("ISBN--1", "Book 1");
-
     bookRepository.saveAll(
         List.of(book1, new Book("ISBN--2", "Book 2"), new Book("ISBN--3", "Book 3")));
 
     var student1 = new Student(1, "Alice", "Apple", null);
     studentRepository.saveAll(
-        List.of(student1, new Student(2, "Bob", "Busker", null), new Student(3, "Clara", "Clarke", null)));
+        List.of(
+            student1,
+            new Student(2, "Bob", "Busker", null),
+            new Student(3, "Clara", "Clarke", null)));
 
     loanRepository.save(new Loan("loan1", book1, student1));
   }
