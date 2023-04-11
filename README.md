@@ -22,6 +22,6 @@ these two options:
 - Main application pre-populates Student & Book tables with dummy data.
 - Added debug controller to verify entities are persisted:
 
-`curl --request GET --url http://localhost:8080/books`
+`curl --request GET --url http://localhost:8080/api/debug/books`
 
-`curl --request GET --url http://localhost:8080/students`
+`curl --request GET --url http://localhost:8080/api/debug/students`
