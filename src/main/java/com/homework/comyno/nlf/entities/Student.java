@@ -1,6 +1,5 @@
 package com.homework.comyno.nlf.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,7 +18,6 @@ public class Student {
   private String lastName;
 
   @OneToMany(mappedBy = "student")
-  @JsonBackReference
   private List<Loan> loans;
 
   public Student() {}

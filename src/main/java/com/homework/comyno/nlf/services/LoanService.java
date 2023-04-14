@@ -5,6 +5,7 @@ import com.homework.comyno.nlf.entities.Loan;
 import com.homework.comyno.nlf.repositories.BookRepository;
 import com.homework.comyno.nlf.repositories.LoanRepository;
 import com.homework.comyno.nlf.repositories.StudentRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class LoanService{
   @Autowired BookRepository bookRepository;
   @Autowired StudentRepository studentRepository;
 
-  public Iterable<Loan> getAllLoans() {
+  public List<Loan> getAllLoans() {
     return loanRepository.findAll();
   }
 

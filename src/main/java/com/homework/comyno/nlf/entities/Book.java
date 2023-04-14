@@ -1,6 +1,5 @@
 package com.homework.comyno.nlf.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,7 +11,6 @@ public class Book {
 
   @OneToOne(mappedBy = "book")
   @JoinColumn(name="loan_id", referencedColumnName = "id")
-  @JsonBackReference
   private Loan loan;
 
   public Book() {}
