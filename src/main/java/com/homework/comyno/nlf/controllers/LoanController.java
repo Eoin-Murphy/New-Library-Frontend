@@ -2,9 +2,7 @@ package com.homework.comyno.nlf.controllers;
 
 import com.homework.comyno.nlf.api.LoanRequest;
 import com.homework.comyno.nlf.entities.Loan;
-import com.homework.comyno.nlf.repositories.BookRepository;
-import com.homework.comyno.nlf.repositories.LoanRepository;
-import com.homework.comyno.nlf.repositories.StudentRepository;
+import com.homework.comyno.nlf.services.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,28 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/loans")
 public class LoanController {
 
-  @Autowired LoanRepository loanRepository;
-  @Autowired StudentRepository studentRepository;
-  @Autowired BookRepository bookRepository;
+  @Autowired
+  LoanService loanService;
 
   @GetMapping("/")
   public Iterable<Loan> getLoans() {
-    return loanRepository.findAll();
+    return loanService.getAllLoans();
   }
 
   @PostMapping("/")
   public Iterable<Loan> postLoan(@RequestBody LoanRequest loan) {
-    var book =
-        bookRepository
-            .findById(loan.getBookId())
-            .orElseThrow(() -> new RuntimeException("Missing book"));
-    var student =
-        studentRepository
-            .findById(loan.getStudentId())
-            .orElseThrow(() -> new RuntimeException("Missing student"));
-
-    loanRepository.save(new Loan(loan.getId(), book, student));
-
+    loanService.saveLoan(loan);
     return getLoans();
   }
 }
