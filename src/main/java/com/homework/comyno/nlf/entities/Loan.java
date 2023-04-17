@@ -6,11 +6,11 @@ import jakarta.persistence.*;
 public class Loan {
   @Id private String id;
 
-  @OneToOne()
+  @OneToOne(cascade = {CascadeType.ALL})
   @JoinColumn(name = "book_id", referencedColumnName = "isbn")
   private Book book;
 
-  @ManyToOne()
+  @ManyToOne(cascade = {CascadeType.ALL})
   @JoinColumn(name = "student_id", referencedColumnName = "id")
   private Student student;
 

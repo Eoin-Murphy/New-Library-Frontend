@@ -9,7 +9,7 @@ public class Book {
   @Column(nullable = false)
   private String title;
 
-  @OneToOne(mappedBy = "book")
+  @OneToOne(mappedBy = "book", cascade = {CascadeType.ALL})
   @JoinColumn(name = "loan_id", referencedColumnName = "id")
   private Loan loan;
 

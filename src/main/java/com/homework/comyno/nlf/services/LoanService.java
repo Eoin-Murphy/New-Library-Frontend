@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoanService{
+public class LoanService {
 
   @Autowired LoanRepository loanRepository;
   @Autowired BookRepository bookRepository;
@@ -23,7 +23,7 @@ public class LoanService{
   public void saveLoan(LoanRequest loan) {
     var book =
         bookRepository
-            .findById(loan.getBookId())
+            .findByIsbn(loan.getBookId())
             .orElseThrow(() -> new RuntimeException("Missing book"));
     var student =
         studentRepository

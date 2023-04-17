@@ -17,12 +17,12 @@ public class LoanController {
   @Autowired
   LoanService loanService;
 
-  @GetMapping("/")
+  @GetMapping
   public Iterable<LoanInfo> getLoans() {
     return loanService.getAllLoans().stream().map(LoanInfo::new).toList();
   }
 
-  @PostMapping("/")
+  @PostMapping
   public Iterable<LoanInfo> postLoan(@RequestBody LoanRequest loan) {
     loanService.saveLoan(loan);
     return getLoans();
