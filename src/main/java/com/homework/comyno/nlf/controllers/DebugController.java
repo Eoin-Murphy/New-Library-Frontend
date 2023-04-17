@@ -24,20 +24,31 @@ public class DebugController {
   @Autowired StudentRepository studentRepository;
   @Autowired LoanRepository loanRepository;
 
+  // exposing these to make testing easier
+  public final static String isbn1 = "isbn1";
+  public final static String isbn2 = "isbn2";
+  public final static String isbn3 = "isbn3";
+
+  public final static String studentId1 = "student1";
+  public final static String studentId2 = "student2";
+  public final static String studentId3 = "student3";
+
+  public final static String loanId1 = "loan1";
+
   @PostMapping("/dbInit")
   public void init() {
-    var book1 = new Book("ISBN-1", "Book 1", null);
+    var book1 = new Book(isbn1, "Book 1", null);
     bookRepository.saveAll(
-        List.of(book1, new Book("ISBN-2", "Book 2", null), new Book("ISBN-3", "Book 3", null)));
+        List.of(book1, new Book(isbn2, "Book 2", null), new Book(isbn3, "Book 3", null)));
 
-    var student1 = new Student("Student-1", "Alice", "Apple", null);
+    var student1 = new Student(studentId1, "Alice", "Apple", null);
     studentRepository.saveAll(
         List.of(
             student1,
-            new Student("Student-2", "Bob", "Busker", null),
-            new Student("Student-3", "Clara", "Clarke", null)));
+            new Student(studentId2, "Bob", "Busker", null),
+            new Student(studentId3, "Clara", "Clarke", null)));
 
-    loanRepository.save(new Loan("loan1", book1, student1));
+    loanRepository.save(new Loan(loanId1, book1, student1));
   }
 
   @DeleteMapping("clearAll")

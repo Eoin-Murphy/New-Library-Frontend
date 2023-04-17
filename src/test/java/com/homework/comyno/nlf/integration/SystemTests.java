@@ -12,6 +12,7 @@ import com.homework.comyno.nlf.api.BookFullInfo;
 import com.homework.comyno.nlf.api.LoanInfo;
 import com.homework.comyno.nlf.api.LoanRequest;
 import com.homework.comyno.nlf.api.StudentFullInfo;
+import com.homework.comyno.nlf.controllers.DebugController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,27 +92,21 @@ class SystemTests {
   }
 
   @Test
-  public void test_createLoan() throws Exception {
-    var bookInfo = getEntityInfo(BookFullInfo.class, "/api/debug/books");
-    var studentInfo = getEntityInfo(StudentFullInfo.class, "/api/debug/students");
-
-    var firstAvailableBook =
-        bookInfo.stream().filter((b) -> b.getBorrower() == null).findFirst().orElse(null);
-    assert firstAvailableBook != null;
-    var aStudentWithoutBooks =
-        studentInfo.stream().filter((s) -> s.getBorrowedBooks().isEmpty()).findFirst().orElse(null);
-    assert aStudentWithoutBooks != null;
-
-    var loanRequest = new LoanRequest("loan-test-id", firstAvailableBook.getIsbn(), aStudentWithoutBooks.getId());
+  public void test_validCreateLoan() throws Exception {
+    var loanRequest =
+        new LoanRequest("loan-test-id", DebugController.isbn2, DebugController.studentId2);
     var loanInfo = createLoan(loanRequest);
 
     assertEquals(2, loanInfo.size());
     var newLoan =
-        loanInfo.stream().filter((l) -> l.getId().equals(loanRequest.getId())).findFirst().orElse(null);
+        loanInfo.stream()
+            .filter((l) -> l.getId().equals(loanRequest.getId()))
+            .findFirst()
+            .orElse(null);
     assertNotNull(newLoan);
 
-    assertEquals(firstAvailableBook.getIsbn(), newLoan.getBook().getIsbn());
-    assertEquals(aStudentWithoutBooks.getId(), newLoan.getStudent().getId());
+    assertEquals(DebugController.isbn2, newLoan.getBook().getIsbn());
+    assertEquals(DebugController.studentId2, newLoan.getStudent().getId());
   }
 
   private <T> List<T> getEntityInfo(Class<T> type, String endPoint) throws Exception {
