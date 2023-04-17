@@ -31,8 +31,16 @@ these two options:
 - Initially just set up a bare-bones Spring Boot App.
 - Decided to use H2 in memory database for persistence.
 - Defined a Book and Student entities.
-- Main application pre-populates Student & Book tables with dummy data.
 - Added debug controller to verify entities are persisted:
+- Debug controller populates Student & Book tables with dummy data when this endpoint is called:
+
+`curl --request GET --url http://localhost:8080/api/debug/initDb`
+
+- Debug controller clears all tables when this endpoint called:
+
+`curl --request GET --url http://localhost:8080/api/debug/initDb`
+
+- These endpoints return the lists of current books/students respectively
 
 `curl --request GET --url http://localhost:8080/api/debug/books`
 
@@ -41,7 +49,10 @@ these two options:
 - Adding a Loan entity (inc. repo, service & controller). I decided to have a separate entity Loan instead of a
   one-to-many Student-Loan direct link for two reasons. (1) We want to be able to pull back the loans directly without
   having to query all students and (2) in a 'real' implementation we would probably want to have some kind of rules
-  applied on loans so they would justify their own entity.
+  applied on loans, so they would justify their own entity.
 - I spend a *lot* of time trying to get data structure unit tests working.
   So having defined the book/student/loan foreign keys in the entity fields, when I try to create a loan between a
   student and a book it works fine. But when I retrieve either the student or book, the loan is null.
+- Jumped ahead to full system tests, and it all seems to be working as expected
+- I do not have endpoints for adding/removing either books or students as they were not specified.
+- The debug controller would have to be deleted before any deployment to live environments.

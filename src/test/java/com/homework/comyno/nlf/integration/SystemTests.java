@@ -111,8 +111,7 @@ class SystemTests {
 
   @Test
   public void test_nonExistentBook() throws Exception {
-    var loanRequest =
-        new LoanRequest("loan-test-id", "dummyId", DebugController.studentId2);
+    var loanRequest = new LoanRequest("loan-test-id", "dummyId", DebugController.studentId2);
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
     var request =
         MockMvcRequestBuilders.post("/api/loans")
@@ -134,11 +133,9 @@ class SystemTests {
     assertEquals(DebugController.studentId1, newLoan.getStudent().getId());
   }
 
-
   @Test
   public void test_nonExistentStudent() throws Exception {
-    var loanRequest =
-        new LoanRequest("loan-test-id", DebugController.isbn1, "dummyId");
+    var loanRequest = new LoanRequest("loan-test-id", DebugController.isbn1, "dummyId");
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
     var request =
         MockMvcRequestBuilders.post("/api/loans")

@@ -25,15 +25,15 @@ public class DebugController {
   @Autowired LoanRepository loanRepository;
 
   // exposing these to make testing easier
-  public final static String isbn1 = "isbn1";
-  public final static String isbn2 = "isbn2";
-  public final static String isbn3 = "isbn3";
+  public static final String isbn1 = "isbn1";
+  public static final String isbn2 = "isbn2";
+  public static final String isbn3 = "isbn3";
 
-  public final static String studentId1 = "student1";
-  public final static String studentId2 = "student2";
-  public final static String studentId3 = "student3";
+  public static final String studentId1 = "student1";
+  public static final String studentId2 = "student2";
+  public static final String studentId3 = "student3";
 
-  public final static String loanId1 = "loan1";
+  public static final String loanId1 = "loan1";
 
   @PostMapping("/dbInit")
   public void init() {

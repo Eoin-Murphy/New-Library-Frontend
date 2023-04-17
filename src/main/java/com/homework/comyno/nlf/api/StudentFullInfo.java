@@ -10,15 +10,14 @@ public class StudentFullInfo extends StudentBaseInfo {
 
   private final List<BookBaseInfo> borrowedBooks;
 
-
   // Adding this to make integration testing deserialization easier
   @JsonCreator
   public StudentFullInfo(
       @JsonProperty("id") String id,
       @JsonProperty("firstName") String firstName,
       @JsonProperty("lastName") String lastName,
-      @JsonProperty("borrowedBooks" )List<BookBaseInfo> borrowedBooks){
-    super(id, firstName,lastName);
+      @JsonProperty("borrowedBooks") List<BookBaseInfo> borrowedBooks) {
+    super(id, firstName, lastName);
     this.borrowedBooks = borrowedBooks;
   }
 

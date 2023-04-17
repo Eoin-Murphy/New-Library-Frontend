@@ -18,7 +18,9 @@ public class Student {
   @Column(nullable = false)
   private String lastName;
 
-  @OneToMany(mappedBy = "student",cascade = {CascadeType.ALL})
+  @OneToMany(
+      mappedBy = "student",
+      cascade = {CascadeType.ALL})
   private List<Loan> loans;
 
   public Student() {}

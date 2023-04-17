@@ -32,7 +32,7 @@ public class LoanService {
             .findById(loan.getStudentId())
             .orElseThrow(() -> new EntityNotFoundException("student", loan.getStudentId()));
 
-    if(loanRepository.findByBookIsbn(loan.getIsbn()).isPresent()){
+    if (loanRepository.findByBookIsbn(loan.getIsbn()).isPresent()) {
       throw new BookOutOnLoanException(loan.getIsbn());
     }
 

@@ -18,8 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/loans")
 public class LoanController {
 
-  @Autowired
-  LoanService loanService;
+  @Autowired LoanService loanService;
 
   @GetMapping
   public Iterable<LoanInfo> getLoans() {
@@ -28,15 +27,12 @@ public class LoanController {
 
   @PostMapping
   public Iterable<LoanInfo> postLoan(@RequestBody LoanRequest loan) {
-    try{
+    try {
       loanService.saveLoan(loan);
-    }
-    catch(BookOutOnLoanException ex){
+    } catch (BookOutOnLoanException ex) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
-    }
-    catch(EntityNotFoundException ex){
+    } catch (EntityNotFoundException ex) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-
     }
 
     return getLoans();

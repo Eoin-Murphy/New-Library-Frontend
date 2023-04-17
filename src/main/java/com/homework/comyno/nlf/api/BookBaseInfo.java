@@ -11,9 +11,7 @@ public class BookBaseInfo {
 
   // Adding this to make integration testing deserialization easier
   @JsonCreator
-  public BookBaseInfo(
-      @JsonProperty("isbn") String isbn,
-      @JsonProperty("title") String title){
+  public BookBaseInfo(@JsonProperty("isbn") String isbn, @JsonProperty("title") String title) {
     this.isbn = isbn;
     this.title = title;
   }
