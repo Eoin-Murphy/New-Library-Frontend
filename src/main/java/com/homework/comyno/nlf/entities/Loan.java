@@ -1,23 +1,19 @@
 package com.homework.comyno.nlf.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class Loan {
   @Id private String id;
 
-  @OneToOne
-  @JoinColumn(name = "book_id", nullable = false)
+  @OneToOne()
+  @JoinColumn(name = "book_id", referencedColumnName = "ISBN")
   @JsonManagedReference
   private Book book;
 
-  @ManyToOne
-  @JoinColumn(name = "student_id", nullable = false)
+  @ManyToOne()
+  @JoinColumn(name = "student_id", referencedColumnName = "id")
   @JsonManagedReference
   private Student student;
 
