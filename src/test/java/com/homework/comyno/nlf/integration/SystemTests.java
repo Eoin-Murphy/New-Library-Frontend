@@ -2,6 +2,7 @@ package com.homework.comyno.nlf.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,6 +12,7 @@ import com.homework.comyno.nlf.NlfApplication;
 import com.homework.comyno.nlf.api.BookFullInfo;
 import com.homework.comyno.nlf.api.LoanInfo;
 import com.homework.comyno.nlf.api.LoanRequest;
+import com.homework.comyno.nlf.api.ReturnRequest;
 import com.homework.comyno.nlf.api.StudentFullInfo;
 import com.homework.comyno.nlf.controllers.DebugController;
 import java.io.IOException;
@@ -38,54 +40,44 @@ class SystemTests {
 
   @BeforeEach
   public void initDb() throws Exception {
-    var request =
+    var initRequestBuilder =
         MockMvcRequestBuilders.post("/api/debug/dbInit")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON);
-
-    mvc.perform(request).andExpect(status().isOk());
-
+    mvc.perform(initRequestBuilder).andExpect(status().isOk());
     var bookInfo = getEntityInfo(BookFullInfo.class, "/api/debug/books");
     var studentInfo = getEntityInfo(StudentFullInfo.class, "/api/debug/students");
     var loanInfo = getEntityInfo(LoanInfo.class, "/api/loans");
-
     // verify the initial state is as we expect;
     assertNotNull(bookInfo);
     assertNotNull(studentInfo);
     assertNotNull(loanInfo);
-
     assertEquals(1, loanInfo.size());
     assertEquals(3, bookInfo.size());
     assertEquals(3, studentInfo.size());
-
     var borrowedBooks = bookInfo.stream().filter((b) -> b.getBorrower() != null).toList();
     assertEquals(1, borrowedBooks.size());
     var borrowingStudents =
         studentInfo.stream().filter((s) -> !s.getBorrowedBooks().isEmpty()).toList();
     assertEquals(1, borrowingStudents.size());
-
     assertEquals(loanInfo.get(0).getStudent().getId(), borrowingStudents.get(0).getId());
     assertEquals(loanInfo.get(0).getBook().getIsbn(), borrowedBooks.get(0).getIsbn());
   }
 
   @AfterEach
   public void cleanup() throws Exception {
-    var request =
+    var deleteRequestBuilder =
         MockMvcRequestBuilders.delete("/api/debug/clearAll")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON);
-
-    mvc.perform(request).andExpect(status().isOk());
-
+    mvc.perform(deleteRequestBuilder).andExpect(status().isOk());
     var bookInfo = getEntityInfo(BookFullInfo.class, "/api/debug/books");
     var studentInfo = getEntityInfo(StudentFullInfo.class, "/api/debug/students");
     var loanInfo = getEntityInfo(LoanInfo.class, "/api/loans");
-
     // verify the initial state is as we expect;
     assertNotNull(bookInfo);
     assertNotNull(studentInfo);
     assertNotNull(loanInfo);
-
     assertEquals(0, loanInfo.size());
     assertEquals(0, bookInfo.size());
     assertEquals(0, studentInfo.size());
@@ -93,10 +85,8 @@ class SystemTests {
 
   @Test
   public void test_validCreateLoan() throws Exception {
-    var loanRequest =
-        new LoanRequest(DebugController.isbn2, DebugController.studentId2);
+    var loanRequest = new LoanRequest(DebugController.isbn2, DebugController.studentId2);
     var loanInfo = createLoan(loanRequest);
-
     assertEquals(2, loanInfo.size());
     var newLoan =
         loanInfo.stream()
@@ -104,7 +94,6 @@ class SystemTests {
             .findFirst()
             .orElse(null);
     assertNotNull(newLoan);
-
     assertEquals(DebugController.isbn2, newLoan.getBook().getIsbn());
     assertEquals(DebugController.studentId2, newLoan.getStudent().getId());
   }
@@ -113,19 +102,16 @@ class SystemTests {
   public void test_nonExistentBook() throws Exception {
     var loanRequest = new LoanRequest("dummyId", DebugController.studentId2);
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
-    var request =
+    var loanRequestBuilder =
         MockMvcRequestBuilders.post("/api/loans")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonLoan);
-
     var jsonResponse =
-        mvc.perform(request)
+        mvc.perform(loanRequestBuilder)
             .andExpect(
                 status()
-                    .is(404)); // this Response status code indicates a request conflict with the
-    // current state of the target resource.
-
+                    .is(404));
     var loanInfo = getLoanInfo();
     assertEquals(1, loanInfo.size());
     var newLoan = loanInfo.get(0);
@@ -137,19 +123,16 @@ class SystemTests {
   public void test_nonExistentStudent() throws Exception {
     var loanRequest = new LoanRequest(DebugController.isbn1, "dummyId");
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
-    var request =
+    var loanRequestBuilder =
         MockMvcRequestBuilders.post("/api/loans")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonLoan);
-
     var jsonResponse =
-        mvc.perform(request)
+        mvc.perform(loanRequestBuilder)
             .andExpect(
                 status()
-                    .is(404)); // this Response status code indicates a request conflict with the
-    // current state of the target resource.
-
+                    .is(404));
     var loanInfo = getLoanInfo();
     assertEquals(1, loanInfo.size());
     var newLoan = loanInfo.get(0);
@@ -159,22 +142,17 @@ class SystemTests {
 
   @Test
   public void test_alreadyLoaned() throws Exception {
-    var loanRequest =
-        new LoanRequest(DebugController.isbn1, DebugController.studentId2);
+    var loanRequest = new LoanRequest(DebugController.isbn1, DebugController.studentId2);
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
-    var request =
+    var loanRequestBuilder =
         MockMvcRequestBuilders.post("/api/loans")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonLoan);
-
-    var jsonResponse =
-        mvc.perform(request)
-            .andExpect(
-                status()
-                    .is(409)); // this Response status code indicates a request conflict with the
+    mvc.perform(loanRequestBuilder)
+        .andExpect(
+            status().is(409)); // this Response status code indicates a request conflict with the
     // current state of the target resource.
-
     var loanInfo = getLoanInfo();
     assertEquals(1, loanInfo.size());
     var newLoan = loanInfo.get(0);
@@ -182,6 +160,22 @@ class SystemTests {
     assertEquals(DebugController.studentId1, newLoan.getStudent().getId());
   }
 
+  @Test
+  public void test_returnBook() throws Exception {
+    var returnRequest = new ReturnRequest(DebugController.isbn1, DebugController.studentId1);
+    var jsonReturn = new ObjectMapper().writeValueAsString(returnRequest);
+    var deleteRequestBuilder =
+        MockMvcRequestBuilders.delete("/api/loans")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonReturn);
+    var jsonResponse = mvc.perform(deleteRequestBuilder).andExpect(status().isOk()).andReturn();
+    var loanInfo = jsonArrayToList(jsonResponse, LoanInfo.class);
+    assertNotNull(loanInfo);
+    assertTrue(loanInfo.isEmpty());
+  }
+
+  // Helper Methods: probably should be in a separate class
   private List<BookFullInfo> getBookInfo() throws Exception {
     return getEntityInfo(BookFullInfo.class, "/api/debug/books");
   }
@@ -200,19 +194,17 @@ class SystemTests {
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andReturn();
-
     return jsonArrayToList(jsonResponse, type);
   }
 
   private List<LoanInfo> createLoan(LoanRequest loanRequest) throws Exception {
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
-    var request =
+    var loanRequestBuilder =
         MockMvcRequestBuilders.post("/api/loans")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonLoan);
-
-    var jsonResponse = mvc.perform(request).andReturn();
+    var jsonResponse = mvc.perform(loanRequestBuilder).andReturn();
     return jsonArrayToList(jsonResponse, LoanInfo.class);
   }
 

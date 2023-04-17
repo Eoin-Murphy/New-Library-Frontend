@@ -1,7 +1,9 @@
 package com.homework.comyno.nlf.services;
 
 import com.homework.comyno.nlf.api.LoanRequest;
+import com.homework.comyno.nlf.api.ReturnRequest;
 import com.homework.comyno.nlf.entities.Loan;
+import com.homework.comyno.nlf.exceptions.BookNotOutOnLoanException;
 import com.homework.comyno.nlf.exceptions.BookOutOnLoanException;
 import com.homework.comyno.nlf.exceptions.EntityNotFoundException;
 import com.homework.comyno.nlf.repositories.BookRepository;
@@ -23,7 +25,7 @@ public class LoanService {
     return loanRepository.findAll();
   }
 
-  public void saveLoan(LoanRequest loan) {
+  public void bookLoanRequested(LoanRequest loan) {
     var book =
         bookRepository
             .findByIsbn(loan.getIsbn())
@@ -38,5 +40,20 @@ public class LoanService {
     }
 
     loanRepository.save(new Loan(UUID.randomUUID().toString(), book, student));
+  }
+  public void bookReturnRequested(ReturnRequest returnRequest) {
+    var book =
+        bookRepository
+            .findByIsbn(returnRequest.getIsbn())
+            .orElseThrow(() -> new EntityNotFoundException("book", returnRequest.getIsbn()));
+    var student =
+        studentRepository
+            .findById(returnRequest.getStudentId())
+            .orElseThrow(() -> new EntityNotFoundException("student", returnRequest.getStudentId()));
+
+    var loan =loanRepository.findByBookIsbn(returnRequest.getIsbn()).orElseThrow(() ->
+        new BookNotOutOnLoanException(returnRequest.getIsbn()));
+
+    loanRepository.deleteById(loan.getId());
   }
 }
