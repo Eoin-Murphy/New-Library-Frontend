@@ -1,6 +1,6 @@
 package com.homework.comyno.nlf.repositories;
 
 import com.homework.comyno.nlf.entities.Loan;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LoanRepository extends CrudRepository<Loan, String> {}
+public interface LoanRepository extends JpaRepository<Loan, String> {}
