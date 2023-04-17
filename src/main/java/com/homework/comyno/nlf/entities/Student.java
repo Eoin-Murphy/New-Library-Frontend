@@ -1,6 +1,5 @@
 package com.homework.comyno.nlf.entities;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -18,9 +17,7 @@ public class Student {
   @Column(nullable = false)
   private String lastName;
 
-  @OneToMany(
-      mappedBy = "student",
-      cascade = {CascadeType.ALL})
+  @OneToMany(mappedBy = "student")
   private List<Loan> loans;
 
   public Student() {}

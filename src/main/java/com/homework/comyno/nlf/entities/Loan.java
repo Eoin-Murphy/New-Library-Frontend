@@ -7,11 +7,11 @@ public class Loan {
   @Id
   private String id;
 
-  @OneToOne(cascade = {CascadeType.ALL})
+  @OneToOne(cascade = {CascadeType.DETACH})
   @JoinColumn(name = "book_isbn", referencedColumnName = "isbn")
   private Book book;
 
-  @ManyToOne(cascade = {CascadeType.ALL})
+  @ManyToOne(cascade = {CascadeType.DETACH})
   @JoinColumn(name = "student_id", referencedColumnName = "id")
   private Student student;
 
