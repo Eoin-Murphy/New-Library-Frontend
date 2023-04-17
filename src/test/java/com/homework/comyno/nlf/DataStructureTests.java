@@ -33,7 +33,7 @@ public class DataStructureTests {
     bookRepository.save(book);
     loanRepository.saveAndFlush(loan);
 
-    var retrievedBook = bookRepository.findById(book.getISBN()).orElse(null);
+    var retrievedBook = bookRepository.findById(book.getIsbn()).orElse(null);
     var retrievedLoan = loanRepository.findById(loan.getId());
 
     assertNotNull(retrievedBook);

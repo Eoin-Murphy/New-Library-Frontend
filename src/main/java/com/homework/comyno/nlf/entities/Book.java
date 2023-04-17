@@ -4,32 +4,32 @@ import jakarta.persistence.*;
 
 @Entity
 public class Book {
-  @Id private String ISBN;
+  @Id private String isbn;
 
   @Column(nullable = false)
   private String title;
 
   @OneToOne(mappedBy = "book")
-  @JoinColumn(name="loan_id", referencedColumnName = "id")
+  @JoinColumn(name = "loan_id", referencedColumnName = "id")
   private Loan loan;
 
   public Book() {}
 
-  public Book(String ISBN, String title, Loan loan) {
-    this.ISBN = ISBN;
+  public Book(String isbn, String title, Loan loan) {
+    this.isbn = isbn;
     this.title = title;
     this.loan = loan;
   }
 
-  public String getISBN() {
-    return ISBN;
+  public String getIsbn() {
+    return isbn;
   }
 
   public String getTitle() {
     return title;
   }
 
-  public Loan getLoan(){
+  public Loan getLoan() {
     return this.loan;
   }
 }
