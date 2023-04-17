@@ -8,6 +8,7 @@ import com.homework.comyno.nlf.repositories.BookRepository;
 import com.homework.comyno.nlf.repositories.LoanRepository;
 import com.homework.comyno.nlf.repositories.StudentRepository;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,6 @@ public class LoanService {
       throw new BookOutOnLoanException(loan.getIsbn());
     }
 
-    loanRepository.save(new Loan(loan.getId(), book, student));
+    loanRepository.save(new Loan(UUID.randomUUID().toString(), book, student));
   }
 }

@@ -53,7 +53,7 @@ public class DebugController {
 
   @DeleteMapping("clearAll")
   public void clearAll() {
-    loanRepository.deleteAll();
+    loanRepository.deleteAll(); // this must be called first due to dependencies
 
     bookRepository.deleteAll();
     studentRepository.deleteAll();

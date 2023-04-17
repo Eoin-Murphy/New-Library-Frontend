@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 
 @Entity
 public class Loan {
-  @Id private String id;
+  @Id
+  private String id;
 
   @OneToOne(cascade = {CascadeType.ALL})
   @JoinColumn(name = "book_isbn", referencedColumnName = "isbn")

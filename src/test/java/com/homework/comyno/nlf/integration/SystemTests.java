@@ -94,13 +94,13 @@ class SystemTests {
   @Test
   public void test_validCreateLoan() throws Exception {
     var loanRequest =
-        new LoanRequest("loan-test-id", DebugController.isbn2, DebugController.studentId2);
+        new LoanRequest(DebugController.isbn2, DebugController.studentId2);
     var loanInfo = createLoan(loanRequest);
 
     assertEquals(2, loanInfo.size());
     var newLoan =
         loanInfo.stream()
-            .filter((l) -> l.getId().equals(loanRequest.getId()))
+            .filter((l) -> !l.getId().equals(DebugController.loanId1))
             .findFirst()
             .orElse(null);
     assertNotNull(newLoan);
@@ -111,7 +111,7 @@ class SystemTests {
 
   @Test
   public void test_nonExistentBook() throws Exception {
-    var loanRequest = new LoanRequest("loan-test-id", "dummyId", DebugController.studentId2);
+    var loanRequest = new LoanRequest("dummyId", DebugController.studentId2);
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
     var request =
         MockMvcRequestBuilders.post("/api/loans")
@@ -135,7 +135,7 @@ class SystemTests {
 
   @Test
   public void test_nonExistentStudent() throws Exception {
-    var loanRequest = new LoanRequest("loan-test-id", DebugController.isbn1, "dummyId");
+    var loanRequest = new LoanRequest(DebugController.isbn1, "dummyId");
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
     var request =
         MockMvcRequestBuilders.post("/api/loans")
@@ -160,7 +160,7 @@ class SystemTests {
   @Test
   public void test_alreadyLoaned() throws Exception {
     var loanRequest =
-        new LoanRequest("loan-test-id", DebugController.isbn1, DebugController.studentId2);
+        new LoanRequest(DebugController.isbn1, DebugController.studentId2);
     var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
     var request =
         MockMvcRequestBuilders.post("/api/loans")
