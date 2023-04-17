@@ -3,12 +3,12 @@ package com.homework.comyno.nlf.api;
 public class LoanRequest {
 
   private final String id;
-  private final String bookId;
+  private final String isbn;
   private final String studentId;
 
-  public LoanRequest(String id, String bookId, String studentId) {
+  public LoanRequest(String id, String isbn, String studentId) {
     this.id = id;
-    this.bookId = bookId;
+    this.isbn = isbn;
     this.studentId = studentId;
   }
 
@@ -16,8 +16,8 @@ public class LoanRequest {
     return id;
   }
 
-  public String getBookId() {
-    return bookId;
+  public String getIsbn() {
+    return isbn;
   }
 
   public String getStudentId() {

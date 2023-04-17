@@ -109,6 +109,94 @@ class SystemTests {
     assertEquals(DebugController.studentId2, newLoan.getStudent().getId());
   }
 
+  @Test
+  public void test_nonExistentBook() throws Exception {
+    var loanRequest =
+        new LoanRequest("loan-test-id", "dummyId", DebugController.studentId2);
+    var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
+    var request =
+        MockMvcRequestBuilders.post("/api/loans")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonLoan);
+
+    var jsonResponse =
+        mvc.perform(request)
+            .andExpect(
+                status()
+                    .is(404)); // this Response status code indicates a request conflict with the
+    // current state of the target resource.
+
+    var loanInfo = getLoanInfo();
+    assertEquals(1, loanInfo.size());
+    var newLoan = loanInfo.get(0);
+    assertEquals(DebugController.isbn1, newLoan.getBook().getIsbn());
+    assertEquals(DebugController.studentId1, newLoan.getStudent().getId());
+  }
+
+
+  @Test
+  public void test_nonExistentStudent() throws Exception {
+    var loanRequest =
+        new LoanRequest("loan-test-id", DebugController.isbn1, "dummyId");
+    var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
+    var request =
+        MockMvcRequestBuilders.post("/api/loans")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonLoan);
+
+    var jsonResponse =
+        mvc.perform(request)
+            .andExpect(
+                status()
+                    .is(404)); // this Response status code indicates a request conflict with the
+    // current state of the target resource.
+
+    var loanInfo = getLoanInfo();
+    assertEquals(1, loanInfo.size());
+    var newLoan = loanInfo.get(0);
+    assertEquals(DebugController.isbn1, newLoan.getBook().getIsbn());
+    assertEquals(DebugController.studentId1, newLoan.getStudent().getId());
+  }
+
+  @Test
+  public void test_alreadyLoaned() throws Exception {
+    var loanRequest =
+        new LoanRequest("loan-test-id", DebugController.isbn1, DebugController.studentId2);
+    var jsonLoan = new ObjectMapper().writeValueAsString(loanRequest);
+    var request =
+        MockMvcRequestBuilders.post("/api/loans")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonLoan);
+
+    var jsonResponse =
+        mvc.perform(request)
+            .andExpect(
+                status()
+                    .is(409)); // this Response status code indicates a request conflict with the
+    // current state of the target resource.
+
+    var loanInfo = getLoanInfo();
+    assertEquals(1, loanInfo.size());
+    var newLoan = loanInfo.get(0);
+    assertEquals(DebugController.isbn1, newLoan.getBook().getIsbn());
+    assertEquals(DebugController.studentId1, newLoan.getStudent().getId());
+  }
+
+  private List<BookFullInfo> getBookInfo() throws Exception {
+    return getEntityInfo(BookFullInfo.class, "/api/debug/books");
+  }
+
+  private List<StudentFullInfo> getStudentInfo() throws Exception {
+    return getEntityInfo(StudentFullInfo.class, "/api/debug/students");
+  }
+
+  private List<LoanInfo> getLoanInfo() throws Exception {
+    return getEntityInfo(LoanInfo.class, "/api/loans");
+  }
+
   private <T> List<T> getEntityInfo(Class<T> type, String endPoint) throws Exception {
     var jsonResponse =
         mvc.perform(get(endPoint).contentType(MediaType.APPLICATION_JSON))

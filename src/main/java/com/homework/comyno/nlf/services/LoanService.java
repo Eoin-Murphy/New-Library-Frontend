@@ -2,6 +2,8 @@ package com.homework.comyno.nlf.services;
 
 import com.homework.comyno.nlf.api.LoanRequest;
 import com.homework.comyno.nlf.entities.Loan;
+import com.homework.comyno.nlf.exceptions.BookOutOnLoanException;
+import com.homework.comyno.nlf.exceptions.EntityNotFoundException;
 import com.homework.comyno.nlf.repositories.BookRepository;
 import com.homework.comyno.nlf.repositories.LoanRepository;
 import com.homework.comyno.nlf.repositories.StudentRepository;
@@ -23,12 +25,16 @@ public class LoanService {
   public void saveLoan(LoanRequest loan) {
     var book =
         bookRepository
-            .findByIsbn(loan.getBookId())
-            .orElseThrow(() -> new RuntimeException("Missing book"));
+            .findByIsbn(loan.getIsbn())
+            .orElseThrow(() -> new EntityNotFoundException("book", loan.getIsbn()));
     var student =
         studentRepository
             .findById(loan.getStudentId())
-            .orElseThrow(() -> new RuntimeException("Missing student"));
+            .orElseThrow(() -> new EntityNotFoundException("student", loan.getStudentId()));
+
+    if(loanRepository.findByBookIsbn(loan.getIsbn()).isPresent()){
+      throw new BookOutOnLoanException(loan.getIsbn());
+    }
 
     loanRepository.save(new Loan(loan.getId(), book, student));
   }
