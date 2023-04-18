@@ -39,10 +39,7 @@ public class DebugController {
   @PostMapping("/dbInit")
   public void init() {
     bookRepository.saveAll(
-        List.of(
-            new Book(isbn1, "Book 1"),
-            new Book(isbn2, "Book 2"),
-            new Book(isbn3, "Book 3")));
+        List.of(new Book(isbn1, "Book 1"), new Book(isbn2, "Book 2"), new Book(isbn3, "Book 3")));
 
     studentRepository.saveAll(
         List.of(
