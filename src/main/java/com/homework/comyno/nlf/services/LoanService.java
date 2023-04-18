@@ -41,6 +41,7 @@ public class LoanService {
 
     loanRepository.save(new Loan(UUID.randomUUID().toString(), book, student));
   }
+
   public void bookReturnRequested(ReturnRequest returnRequest) {
     var book =
         bookRepository
@@ -49,10 +50,13 @@ public class LoanService {
     var student =
         studentRepository
             .findById(returnRequest.getStudentId())
-            .orElseThrow(() -> new EntityNotFoundException("student", returnRequest.getStudentId()));
+            .orElseThrow(
+                () -> new EntityNotFoundException("student", returnRequest.getStudentId()));
 
-    var loan =loanRepository.findByBookIsbn(returnRequest.getIsbn()).orElseThrow(() ->
-        new BookNotOutOnLoanException(returnRequest.getIsbn()));
+    var loan =
+        loanRepository
+            .findByBookIsbn(returnRequest.getIsbn())
+            .orElseThrow(() -> new BookNotOutOnLoanException(returnRequest.getIsbn()));
 
     loanRepository.deleteById(loan.getId());
   }

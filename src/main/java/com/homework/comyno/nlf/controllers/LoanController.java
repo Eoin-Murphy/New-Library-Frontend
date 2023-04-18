@@ -35,18 +35,17 @@ public class LoanController {
 
     return getAllBooksOnLoan();
   }
-  
+
   @DeleteMapping
-  public Iterable<LoanInfo> returnBook(@RequestBody ReturnRequest returnRequest){
+  public Iterable<LoanInfo> returnBook(@RequestBody ReturnRequest returnRequest) {
     try {
       loanService.bookReturnRequested(returnRequest);
     } catch (EntityNotFoundException ex) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-    } catch (BookNotOutOnLoanException ex){
+    } catch (BookNotOutOnLoanException ex) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     return getAllBooksOnLoan();
-
   }
 }
