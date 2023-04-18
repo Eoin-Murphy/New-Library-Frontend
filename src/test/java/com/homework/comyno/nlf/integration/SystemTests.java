@@ -107,11 +107,7 @@ class SystemTests {
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonLoan);
-    var jsonResponse =
-        mvc.perform(loanRequestBuilder)
-            .andExpect(
-                status()
-                    .is(404));
+    var jsonResponse = mvc.perform(loanRequestBuilder).andExpect(status().is(404));
     var loanInfo = getLoanInfo();
     assertEquals(1, loanInfo.size());
     var newLoan = loanInfo.get(0);
@@ -128,11 +124,7 @@ class SystemTests {
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonLoan);
-    var jsonResponse =
-        mvc.perform(loanRequestBuilder)
-            .andExpect(
-                status()
-                    .is(404));
+    var jsonResponse = mvc.perform(loanRequestBuilder).andExpect(status().is(404));
     var loanInfo = getLoanInfo();
     assertEquals(1, loanInfo.size());
     var newLoan = loanInfo.get(0);

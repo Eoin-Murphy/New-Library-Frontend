@@ -35,18 +35,23 @@ public class DebugController {
 
   public static final String loanId1 = "loan1";
 
+  @SuppressWarnings("OptionalGetWithoutIsPresent")
   @PostMapping("/dbInit")
   public void init() {
-    var book1 = new Book(isbn1, "Book 1", null);
     bookRepository.saveAll(
-        List.of(book1, new Book(isbn2, "Book 2", null), new Book(isbn3, "Book 3", null)));
+        List.of(
+            new Book(isbn1, "Book 1", null),
+            new Book(isbn2, "Book 2", null),
+            new Book(isbn3, "Book 3", null)));
 
-    var student1 = new Student(studentId1, "Alice", "Apple", null);
     studentRepository.saveAll(
         List.of(
-            student1,
+            new Student(studentId1, "Alice", "Apple", null),
             new Student(studentId2, "Bob", "Busker", null),
             new Student(studentId3, "Clara", "Clarke", null)));
+
+    var book1 = bookRepository.findByIsbn(isbn1).get();
+    var student1 = studentRepository.findById(studentId1).get();
 
     loanRepository.save(new Loan(loanId1, book1, student1));
   }
