@@ -9,11 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homework.comyno.nlf.NlfApplication;
-import com.homework.comyno.nlf.api.BookFullInfo;
+import com.homework.comyno.nlf.api.BookBaseInfo;
 import com.homework.comyno.nlf.api.LoanInfo;
 import com.homework.comyno.nlf.api.LoanRequest;
 import com.homework.comyno.nlf.api.ReturnRequest;
-import com.homework.comyno.nlf.api.StudentFullInfo;
+import com.homework.comyno.nlf.api.StudentBaseInfo;
 import com.homework.comyno.nlf.controllers.DebugController;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,23 +45,18 @@ class SystemTests {
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON);
     mvc.perform(initRequestBuilder).andExpect(status().isOk());
-    var bookInfo = getEntityInfo(BookFullInfo.class, "/api/debug/books");
-    var studentInfo = getEntityInfo(StudentFullInfo.class, "/api/debug/students");
-    var loanInfo = getEntityInfo(LoanInfo.class, "/api/loans");
     // verify the initial state is as we expect;
+    var bookInfo = getBookInfo();
+    var studentInfo = getStudentInfo();
+    var loanInfo = getLoanInfo();
     assertNotNull(bookInfo);
     assertNotNull(studentInfo);
     assertNotNull(loanInfo);
-    assertEquals(1, loanInfo.size());
     assertEquals(3, bookInfo.size());
     assertEquals(3, studentInfo.size());
-    var borrowedBooks = bookInfo.stream().filter((b) -> b.getBorrower() != null).toList();
-    assertEquals(1, borrowedBooks.size());
-    var borrowingStudents =
-        studentInfo.stream().filter((s) -> !s.getBorrowedBooks().isEmpty()).toList();
-    assertEquals(1, borrowingStudents.size());
-    assertEquals(loanInfo.get(0).getStudent().getId(), borrowingStudents.get(0).getId());
-    assertEquals(loanInfo.get(0).getBook().getIsbn(), borrowedBooks.get(0).getIsbn());
+    assertEquals(1, loanInfo.size());
+    assertEquals(loanInfo.get(0).getStudent().getId(), DebugController.studentId1);
+    assertEquals(loanInfo.get(0).getBook().getIsbn(), DebugController.isbn1);
   }
 
   @AfterEach
@@ -71,8 +66,8 @@ class SystemTests {
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON);
     mvc.perform(deleteRequestBuilder).andExpect(status().isOk());
-    var bookInfo = getEntityInfo(BookFullInfo.class, "/api/debug/books");
-    var studentInfo = getEntityInfo(StudentFullInfo.class, "/api/debug/students");
+    var bookInfo = getEntityInfo(BookBaseInfo.class, "/api/debug/books");
+    var studentInfo = getEntityInfo(StudentBaseInfo.class, "/api/debug/students");
     var loanInfo = getEntityInfo(LoanInfo.class, "/api/loans");
     // verify the initial state is as we expect;
     assertNotNull(bookInfo);
@@ -162,18 +157,26 @@ class SystemTests {
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonReturn);
     var jsonResponse = mvc.perform(deleteRequestBuilder).andExpect(status().isOk()).andReturn();
-    var loanInfo = jsonArrayToList(jsonResponse, LoanInfo.class);
+
+    // verify the final state is as we expect;
+    var bookInfo = getBookInfo();
+    var studentInfo = getStudentInfo();
+    var loanInfo = getLoanInfo();
+    assertNotNull(bookInfo);
+    assertNotNull(studentInfo);
     assertNotNull(loanInfo);
+    assertEquals(3, bookInfo.size());
+    assertEquals(3, studentInfo.size());
     assertTrue(loanInfo.isEmpty());
   }
 
   // Helper Methods: probably should be in a separate class
-  private List<BookFullInfo> getBookInfo() throws Exception {
-    return getEntityInfo(BookFullInfo.class, "/api/debug/books");
+  private List<BookBaseInfo> getBookInfo() throws Exception {
+    return getEntityInfo(BookBaseInfo.class, "/api/debug/books");
   }
 
-  private List<StudentFullInfo> getStudentInfo() throws Exception {
-    return getEntityInfo(StudentFullInfo.class, "/api/debug/students");
+  private List<StudentBaseInfo> getStudentInfo() throws Exception {
+    return getEntityInfo(StudentBaseInfo.class, "/api/debug/students");
   }
 
   private List<LoanInfo> getLoanInfo() throws Exception {

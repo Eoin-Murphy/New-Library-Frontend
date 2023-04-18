@@ -8,7 +8,6 @@ import com.homework.comyno.nlf.entities.Student;
 import com.homework.comyno.nlf.repositories.BookRepository;
 import com.homework.comyno.nlf.repositories.LoanRepository;
 import com.homework.comyno.nlf.repositories.StudentRepository;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,9 @@ public class DataStructureTests {
   @Autowired LoanRepository loanRepository;
 
   @Test
-  @Ignore("Test is failing where it shouldn't due to spring defaults")
   public void insertRetrieveAndDelete() throws InterruptedException {
-    var book = new Book("test-book-1", "Test Book 1", null);
-    var student = new Student("test-student-1", "Test1-first", "Test1-lastName", null);
+    var book = new Book("test-book-1", "Test Book 1");
+    var student = new Student("test-student-1", "Test1-first", "Test1-lastName");
     var loan = new Loan("test-loan-1", book, student);
 
     bookRepository.save(book);
@@ -37,6 +35,5 @@ public class DataStructureTests {
     var retrievedLoan = loanRepository.findById(loan.getId());
 
     assertNotNull(retrievedBook);
-    assertNotNull(retrievedBook.getLoan());
   }
 }

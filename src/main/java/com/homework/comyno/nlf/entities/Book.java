@@ -9,16 +9,11 @@ public class Book {
   @Column(nullable = false)
   private String title;
 
-  @OneToOne(mappedBy = "book")
-  @JoinColumn(name = "loan_id", referencedColumnName = "id")
-  private Loan loan;
-
   public Book() {}
 
-  public Book(String isbn, String title, Loan loan) {
+  public Book(String isbn, String title) {
     this.isbn = isbn;
     this.title = title;
-    this.loan = loan;
   }
 
   public String getIsbn() {
@@ -27,9 +22,5 @@ public class Book {
 
   public String getTitle() {
     return title;
-  }
-
-  public Loan getLoan() {
-    return this.loan;
   }
 }
