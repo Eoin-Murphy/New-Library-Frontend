@@ -25,6 +25,8 @@ these two options:
 - A student can loan many books at the same time.
 - If a student tries to load a book currently loaned to another student their request is rejected.
 - There is no time limit on loans and/or late fees.
+- Deleting a loan should not delete either Book or Student
+- Book/Student CRUD is not part of the assignment
 
 # Dev Progress:
 
@@ -56,3 +58,52 @@ these two options:
 - Jumped ahead to full system tests, and it all seems to be working as expected
 - I do not have endpoints for adding/removing either books or students as they were not specified.
 - The debug controller would have to be deleted before any deployment to live environments.
+
+After download it can be built with `mvn package` and the generated jar file run as usual from a comand line `java -jar nlf-0.0.1-SNAPSHOT.jar`
+
+Helpful API endpoints:
+
+- db Init populates with some dummy data: 
+
+`curl --request POST  \
+  --url http://localhost:8080/api/debug/dbInit`
+  
+- db clear drops everything: 
+
+`curl --request DELETE \
+  --url http://localhost:8080/api/debug/clearAll`
+
+- list all students:
+
+`curl --request GET \
+  --url http://localhost:8080/api/debug/students`
+
+- list all books:
+
+`curl --request GET \
+  --url http://localhost:8080/api/debug/books`
+
+- list all current loans: 
+
+`curl --request GET \
+  --url http://localhost:8080/api/loans`
+
+- loan a book:
+
+`curl --request POST \
+  --url http://localhost:8080/api/loans \
+  --header 'Content-Type: application/json' \
+  --data '{
+"isbn":"isbn2",
+"studentId":"student2"
+}'`
+
+- return a book:
+
+`curl --request DELETE \
+  --url http://localhost:8080/api/loans \
+  --header 'Content-Type: application/json' \
+  --data '{
+"isbn":"isbn2",
+"studentId":"student2"
+}'`
